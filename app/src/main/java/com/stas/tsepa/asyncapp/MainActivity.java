@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import java.util.concurrent.Executor;
+
 class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -63,7 +65,12 @@ class MainActivity extends AppCompatActivity {
     private void startTask() {
         taskId++;
         Log.d(LOG_TAG, Integer.toString(id) + " start task " + Integer.toString(taskId));
-        new MyTask().execute(taskId);
+        new MyTask().executeOnExecutor(new Executor() {
+            @Override
+            public void execute(Runnable runnable) {
+                new Thread(runnable).start();
+            }
+        }, taskId);
     }
 
     private class MyTask extends AsyncTask<Integer, Void, Void> {
@@ -71,6 +78,9 @@ class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Integer... ints) {
+            if (ints.length == 0) {
+                ints = new Integer[]{-1};
+            }
             try {
                 Log.d(LOG_TAG, "Execution started" + " task " + Integer.toString(ints[0]));
                 Thread.sleep(10000);
