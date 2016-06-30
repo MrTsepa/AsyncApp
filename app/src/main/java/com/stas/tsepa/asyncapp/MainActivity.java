@@ -2,6 +2,7 @@ package com.stas.tsepa.asyncapp;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -67,7 +68,7 @@ class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, Integer.toString(id) + " start task " + Integer.toString(taskId));
         new MyTask().executeOnExecutor(new Executor() {
             @Override
-            public void execute(Runnable runnable) {
+            public void execute(@NonNull Runnable runnable) {
                 new Thread(runnable).start();
             }
         }, taskId);
